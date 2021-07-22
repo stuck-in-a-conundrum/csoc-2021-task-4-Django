@@ -21,29 +21,55 @@
     <dt>Available Copies:</dt>
     <dd>{{ num_available }}</dd>
 </dl>
-<button class="btn btn-primary" id="loan-button">Loan {{ book.title }}</button>
-<script>
-$("#loan-button").click(function(){
-    $.ajax({
-		url: "{% url 'loan-book' %}",
-		method: "POST",
-		data: {
-			bid: {{ book.id }}
-		},
-		success: function(data, status, xhr){
-			if(data['message'] == "success"){
-                alert("Book successfully issued");
-                window.location.replace("/books/loaned");
-			}
-			else{
-				alert("Unable to issue this book");
-			}
-		},
-		error: function(xhr, status, err){
-			alert("Some error occured");
-		}
+<button class="btn btn-primary" id="loan-button">Loan</button>
+<button class="btn btn-warning" id="rate-button">Rate</button>
 
+<script>
+	$("#loan-button").click(function(){
+		$.ajax({
+			url: "{% url 'loan-book' %}",
+			method: "POST",
+			data: {
+				bid: "{{ book.id}}"
+			},
+			success: function(data, status, xhr){
+				if(data['message'] == "success"){
+					alert("Book successfully issued");
+					window.location.replace("/books/loaned");
+				}
+				else{
+					alert("Unable to issue this book");
+				}
+			},
+			error: function(xhr, status, err){
+				alert("You need to be logged in");
+			}
+	
+		})
 	})
-})
-</script>
-{% endblock %}
+	$("#rate-button").click(function(){
+		$.ajax({
+			url: "{% url 'rate-book' %}",
+			method: "POST",
+			data: {
+				bid: "{{ book.id}}",
+			},
+			success: function(data, status, xhr){
+				if(data['message'] == "success"){
+					alert("Book successfully rated");
+					window.location.replace("/books/{bid}/");
+				}
+				else{
+					alert("Unable to rate this book");
+				}
+			},
+			error: function(xhr, status, err){
+				alert("You need to be logged in");
+			}
+	
+		})
+	})
+
+
+	</script>
+	{% endblock %}
